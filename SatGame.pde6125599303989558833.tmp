@@ -1,0 +1,75 @@
+import processing.serial.*;
+
+int moveX;
+int moveY;
+int[] moveValues;
+int indexAdder;
+Serial port;
+String portTest = " ";
+
+//used in move() to go through array
+int move = 0;
+
+void setup(){
+  println(port.list());
+  port =  new Serial(this,port.list()[2],9600);
+  moveX = 0;
+  moveY = 0;
+  moveValues = new int[11];
+  indexAdder = 0;
+  //populate array
+  moveValues[0] = 0;
+  for (int i=1; i<moveValues.length; i++){
+    indexAdder += 50;
+    if (indexAdder > 500){
+      indexAdder = 500;
+    }
+    moveValues[i] = indexAdder;
+    portTest += moveValues[i];
+    portTest += " ";
+    
+  }
+  println(portTest);
+  size(500,500);
+}
+
+void draw(){
+  background(255);
+  fill(0,255,233);
+  rect(moveX,moveX,40,40);
+  control(port.read());
+
+}
+
+void control(int reader){
+  // feed port readings to reader variable
+  switch (reader){
+    case 1:  moveUp();
+    break;
+    
+    case 2:  moveDown();
+    break;
+    
+    case 3:  moveLeft();
+    break;
+    
+    case 4:  moveRight();
+    break;
+  }
+}
+
+void moveUp(){
+  moveY += moveValues[move++]; 
+}
+
+void moveDown(){
+  moveY += moveValues[move--]; 
+}
+
+void moveLeft(){
+  moveX += moveValues[move++]; 
+}
+
+void moveRight(){
+  moveX += moveValues[move--]; 
+}
